@@ -5,7 +5,7 @@ meant to be non-surprising for new users and robust. Experienced Zsh users are
 encouraged to customize their config to unlock the full potential of their
 shell.
 
-* 1. [tmux](#tmux)
+* 1. [tmux and Zellij](#tmux-and-zellij)
 * 2. [Prompt at bottom](#prompt-at-bottom)
 * 3. [Autosuggestions](#autosuggestions)
 * 4. [Shell integration](#shell-integration)
@@ -28,7 +28,9 @@ shell.
 * 16. [Privileged shell](#privileged-shell)
 * 17. [Homebrew](#homebrew)
 
-## tmux
+## tmux and Zellij
+
+### tmux
 
 If you choose *No* when asked by the installer whether `zsh` should always run
 in `tmux`, you'll have the following snippet in `~/.zshrc`:
@@ -70,6 +72,36 @@ support for them explicitly. For example:
 alias nano='nano --mouse'
 ```
 
+### Zellij
+
+[Zellij](https://zellij.dev/) is a modern terminal multiplexer written in Rust that
+can be used as an alternative to tmux. To use Zellij with Zsh for Humans, you can
+configure it to start automatically:
+
+```zsh
+# Start Zellij instead of tmux.
+zstyle ':z4h:' start-tmux command zellij
+```
+
+Alternatively, if you want to use system Zellij with specific options:
+
+```zsh
+# Start Zellij with custom options.
+zstyle ':z4h:' start-tmux command zellij options --layout compact
+```
+
+Note that some features that work with integrated tmux may behave differently with
+Zellij, as Zellij has a different architecture and feature set. The `start-tmux`
+option accepts `command <cmd> [flag]...` which allows you to specify any terminal
+multiplexer, not just tmux.
+
+If you prefer not to use any terminal multiplexer, keep the following in your `~/.zshrc`:
+
+```zsh
+# Don't start any terminal multiplexer.
+zstyle ':z4h:' start-tmux no
+```
+
 ## Prompt at bottom
 
 Having prompt always in the same location allows you to find it quicker and to
@@ -83,7 +115,7 @@ starts and upon pressing <kbd>Ctrl+L</kbd>:
 zstyle ':z4h:' prompt-at-bottom 'yes'
 ```
 
-This feature requires that [`start-tmux` is not set to `no`](#tmux).
+This feature requires that [`start-tmux` is not set to `no`](#tmux-and-zellij).
 
 If you have a habit of running `clear` instead of pressing <kbd>Ctrl+L</kbd>,
 you can add this alias:
@@ -122,7 +154,7 @@ This enables extra features in terminals that understand [OSC 133](
 [kitty](https://sw.kovidgoyal.net/kitty/shell-integration/), and perhaps
 others). It also fixes [horrific mess when resizing terminal window](
   https://github.com/romkatv/powerlevel10k#horrific-mess-when-resizing-terminal-window),
-provided that you've enabled [integrated tmux](#tmux).
+provided that you've enabled [integrated tmux](#tmux-and-zellij).
 
 In iTerm2 you'll see blue triangles to the left of every prompt. This can be
 [disabled](
