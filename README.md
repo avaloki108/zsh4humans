@@ -79,14 +79,14 @@ changes to the file system. Once you exit Zsh, the image is deleted.
 - **Alpine Linux**: starts quickly; install additional software with `apk add <package>`
   ```zsh
   docker run -e TERM -e COLORTERM -e LC_ALL=C.UTF-8 -w /root -it --detach-keys="ctrl-^,ctrl-@" --rm alpine sh -uec '
-    apk add zsh curl tmux
+    apk add zsh curl tmux zellij
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"'
   ```
 - **Ubuntu**: install additional software with `apt install <package>`:
   ```zsh
   docker run -e TERM -e COLORTERM -w /root -it --detach-keys="ctrl-^,ctrl-@" --rm ubuntu sh -uec '
     apt-get update
-    apt-get install -y zsh curl tmux
+    apt-get install -y zsh curl tmux zellij
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"'
   ```
 
