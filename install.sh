@@ -158,22 +158,27 @@ while 'true'; do
 done
 
 >&2 'printf' '\n'
->&2 'printf' 'Do you want \033[32mzsh\033[0m to always run in \033[32mtmux\033[0m?\n'
+>&2 'printf' 'Which \033[1mterminal multiplexer\033[0m do you want to use?\n'
 >&2 'printf' '\n'
->&2 'printf' '  \033[1m(y)\033[0m  Yes.\n'
->&2 'printf' '  \033[1m(n)\033[0m  No.\n'
+>&2 'printf' '  \033[1m(1)\033[0m  \033[32mtmux\033[0m   - Traditional terminal multiplexer.\n'
+>&2 'printf' '  \033[1m(2)\033[0m  \033[32mzellij\033[0m - Modern terminal multiplexer written in Rust.\n'
+>&2 'printf' '  \033[1m(3)\033[0m  \033[32mNone\033[0m   - Do not use a terminal multiplexer.\n'
 >&2 'printf' '  \033[1m(q)\033[0m  Quit and do nothing.\n'
 >&2 'printf' '\n'
 while 'true'; do
-  >&2 'printf' '\033[1mChoice [ynq]:\033[0m '
+  >&2 'printf' '\033[1mChoice [123q]:\033[0m '
   'read_choice'
   case "$choice" in
-    'y'|'Y')
-      tmux='1'
+    '1')
+      multiplexer='tmux'
       'break'
     ;;
-    'n'|'N')
-      tmux='0'
+    '2')
+      multiplexer='zellij'
+      'break'
+    ;;
+    '3')
+      multiplexer='none'
       'break'
     ;;
     'q'|'Q')
@@ -319,10 +324,12 @@ if ! err="$($fetch "$zshrc" '--' "$url"/.zshrc"$zshrc_suffix" 2>&1)"; then
   'exit' '1'
 fi
 
-if '[' "$tmux" '=' '1' ']'; then
+if '[' "$multiplexer" '=' 'tmux' ']'; then
   'command' 'awk' "/Mark up shell's output/ {print \"# Start tmux if not already in tmux.\"; print \"zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h\"; print \"\"; print \"# Whether to move prompt to the bottom when zsh starts and on Ctrl+L.\"; print \"zstyle ':z4h:' prompt-at-bottom 'no'\"; print \"\"} 1" "$zshrc" >"$zshrc.bak"
+elif '[' "$multiplexer" '=' 'zellij' ']'; then
+  'command' 'awk' "/Mark up shell's output/ {print \"# Start zellij if not already in zellij.\"; print \"zstyle ':z4h:' start-tmux command zellij\"; print \"\"; print \"# Whether to move prompt to the bottom when zsh starts and on Ctrl+L.\"; print \"zstyle ':z4h:' prompt-at-bottom 'no'\"; print \"\"} 1" "$zshrc" >"$zshrc.bak"
 else
-  'command' 'awk' "/Mark up shell's output/ {print \"# Don't start tmux.\"; print \"zstyle ':z4h:' start-tmux       no\"; print \"\"} 1" "$zshrc" >"$zshrc.bak"
+  'command' 'awk' "/Mark up shell's output/ {print \"# Don't start a terminal multiplexer.\"; print \"zstyle ':z4h:' start-tmux       no\"; print \"\"} 1" "$zshrc" >"$zshrc.bak"
 fi
 'command' 'mv' '--' "$zshrc.bak" "$zshrc"
 
